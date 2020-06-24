@@ -232,21 +232,154 @@ router.put('/experience', [auth, [
 // @desc.     Delete an experience
 // @access.   PRIVATE
 router.delete('/experience/:exp_id', auth, async (req, res) => {
+  // use try catch to see if our code will work
+  // if not we'll throw an error
   try {
-    const profile = Profile.findOne({ user: req.user.id });
-    console.log(profile);
+
+    // Grab the user pofile
+    // MAKE SURE TO USE await!
+    // You'll need to get the user id from the request object
+    const profile = await Profile.findOne({ user: req.user.id });
+
     // Get remove index
+    // we use map to create a new array
+    // we look at each experience in array and
+    //  grab it's id (this is the unique `_id` mongo was kind enough to create for us when we
+    //  created an experience
+    //  when we find the id in the URL (the last part will be the experience id and we can access that with :experience in our route))
+    // if the item id matches the exp_id we will get the index of where that happened in the array
+    // we store that index number inside removeIndex variable
+
     const removeIndex = profile.experience.map(item => item.id).indexOf(req.params.exp_id);
 
-    // find the experience item and remove it
-    profile.experience.splice(removeIndex, 1);
+    // Make sure we find a match before we delete
+    if (removeIndex !== -1) {
+      // find the experience item and remove it
+      profile.experience.splice(removeIndex, 1);
+    } else {
+      console.error('Experience not found');
+      return res.status(500).send('Experience not found');
+    }
 
+    // don't forget to tell Mongoose to save this
+    // in your Database
     await profile.save();
 
+    // return the profile to the client
+    // we can use this with react if we want
+    // to give the end user some feedback
+    // make sure to check and see that the experience
+    // you deleted is gone from the experience array
     res.json(profile);
 
   } catch (err) {
+    // if we have an error show it
     console.error(err.message);
+    // always return a status in the response
+    // we use 500 to show server error
+    res.status(500).send('Server Error');
+  }
+})
+
+// @route.    PUT api/profile/education
+// @desc.     Add profile education
+// @access.   PRIVATE
+router.put('/education', [auth, [
+  check('school', 'School is required').not().isEmpty(),
+  check('degree', 'Degree is required').not().isEmpty(),
+  check('field_of_study', 'Field of Study is required').not().isEmpty()
+]], async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array()})
+  }
+
+  const {
+    school,
+    degree,
+    field_of_study // eslint-disable-line camelcase
+  } = req.body;
+
+  // Create an object with the data the user submits
+  const newEdu = {
+    school,
+    degree,
+    field_of_study
+  };
+
+  try {
+    const profile = await Profile.findOne({ user: req.user.id});
+
+    if (!profile) {
+      console.log('profile not found');
+      return res.status(400).json({ msg: 'Profile not found'});
+    }
+    // we use unshift to add the new education at the end of the array (rather than beginning with push() array method)
+    profile.education.unshift(newEdu);
+    // console.log(profile.education);
+    // We found the profile
+    // We added our new education to the profile
+    // Now we need to save it to our DB using Mongoose `save()`
+    await profile.save();
+
+    // We return the profile in the response that we'll use in the frontend (React) later on
+    res.json(profile);
+  } catch (err) {
+   console.error(err.message);
+   res.status(500).send('Server Error');
+  }
+});
+
+// @route.    DELETE api/profile/education/edu_id:
+// @desc.     Delete an education
+// @access.   PRIVATE
+router.delete('/education/:edu_id', auth, async (req, res) => {
+  // use try catch to see if our code will work
+  // if not we'll throw an error
+  try {
+
+    // Grab the user profile
+    // MAKE SURE TO USE await!
+    // You'll need to get the user id from the request object
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    // Get remove index
+    // we use map to create a new array
+    // we look at each education in array and
+    //  grab it's id (this is the unique `_id` mongo was kind enough to create for us when we
+    //  created an education
+    //  when we find the id in the URL (the last part will be the education id and we can access that with :education in our route))
+    // if the item id matches the exp_id we will get the index of where that happened in the array
+    // we store that index number inside removeIndex variable
+
+    const removeIndex = profile.education.map(item => item.id).indexOf(req.params.edu_id);
+
+    // Make sure we find a match before we delete
+    if (removeIndex !== -1) {
+      // find the education item and remove it
+      profile.education.splice(removeIndex, 1);
+    } else {
+      console.error('Education not found');
+      return res.status(500).send('education not found');
+    }
+
+    // don't forget to tell Mongoose to save this
+    // in your Database
+    await profile.save();
+
+    // return the profile to the client
+    // we can use this with react if we want
+    // to give the end user some feedback
+    // make sure to check and see that the education
+    // you deleted is gone from the education array
+    res.json(profile);
+
+  } catch (err) {
+    // if we have an error show it
+    console.error(err.message);
+    // always return a status in the response
+    // we use 500 to show server error
     res.status(500).send('Server Error');
   }
 })
