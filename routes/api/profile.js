@@ -1,5 +1,10 @@
+// third party dependencies
 const express = require('express');
 const { check, validationResult } = require('express-validator');
+// const request = require('request'); // DELETE
+// const config = require('config');
+const axios = require('axios');
+// my dependencies
 const auth = require('../../middleware/auth');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
@@ -382,6 +387,56 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
     // we use 500 to show server error
     res.status(500).send('Server Error');
   }
-})
+});
 
+// OLD WAY WITH request npm module
+// @route.    GET api/profile/github/:username
+// @desc.     Get user repos from GitHub
+// @access.   PUBLIC
+// router.get('/github/:username', (req, res) => {
+//   try {
+//     const options = {
+//       uri: `http://api.github.com/users/${req.params.username}/repos?per_page=5=created:asc&client_id={$config.get('githubClientId')}&client_secret=${config.get('githubSecret')}`,
+//       method: 'GET',
+//       headers: { 'user-agent': 'node.js'}
+//     };
+
+//     request(options, (error, response, body) => {
+//       if (error) {
+//         console.error(error);
+//       }
+
+//       if (response.statusCode !== 200) {
+//         res.status(404).json({ msg: 'No GitHub profile found' });
+//       }
+
+//       // The body will just be a regular String
+//       //   with escaped quotes and stuff like that
+//       //   So we use JSON.parse(body) before we send it
+//       res.json(JSON.parse(body));
+//     });
+//   } catch (err) {
+//    console.error(err.message);
+//    res.status(500).send('Server Error');
+//   }
+// })
+
+// @route.    GET api/profile/github/:username
+// @desc.     Get user repos from GitHub
+// @access.   PUBLIC
+router.get('/github/:username', async (req, res) => {
+  try {
+   const uri = encodeURI(`https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc`);
+   const headers = {
+     'user-agent': 'node.js',
+     Authorization: `token ${process.env.GITHUB_ACCESS_TOKEN}`
+   }
+
+   const gitHubResponse = await axios.get(uri, { headers });
+   return res.json(gitHubResponse.data);
+  } catch (err) {
+   console.error(err.message);
+   res.status(404).json({ msg: 'No GitHub profile found'});
+  }
+});
 module.exports = router;
