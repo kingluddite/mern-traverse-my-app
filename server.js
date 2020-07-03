@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
-const favicon = require("serve-favicon");
+// add favicon later
+// const favicon = require("serve-favicon");
 const colors = require("colors"); // eslint-disable-line no-unused-vars
 const dotenv = require("dotenv").config({ path: "./config/config.env" }); // eslint-disable-line no-unused-vars
 const connectDB = require("./config/db");
