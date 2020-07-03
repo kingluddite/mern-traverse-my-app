@@ -1,3 +1,6 @@
-// {
-//   "mongoURI": "mongodb+srv://philadmin:<password>@devconnector-a2gjt.mongodb.net/<dbname>?retryWrites=true&w=majority"
-// }
+{
+  "mongoURI": "mongodb+srv://philadmin:<password>@devconnector-a2gjt.mongodb.net/<dbname>?retryWrites=true&w=majority",
+  "jwtSecret": "123",
+  "githubClientId": "123",
+  "githubSecret": "123"
+}

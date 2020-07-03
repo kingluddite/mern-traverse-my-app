@@ -7,7 +7,8 @@
     "start": "node server",
     "server": "nodemon server",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heoku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "keywords": [],
   "author": "kingluddite",
@@ -36,7 +37,8 @@
     "express-validator": "^6.5.0",
     "gravatar": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.17"
-  },
-  "proxy": "http://locahosthost:5000"
+    "mongoose": "^5.9.17",
+    "serve-favicon": "^2.5.0",
+    "uuid": "^8.2.0"
+  }
 }

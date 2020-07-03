@@ -1,4 +1,7 @@
 node_modules/
 .DS_Store
 config/config.env
+config/production.env
+config/default.json
+config/production.json
 .env
