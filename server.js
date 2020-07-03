@@ -7,11 +7,11 @@ const connectDB = require("./config/db");
 
 const app = express();
 // favicon stuff
-const iconPath = path.join(__dirname, "public", "favicon.ico");
-const options = {
-  maxAge: 200 * 60 * 60 * 24 * 1000,
-};
-app.use(favicon(iconPath, options));
+// const iconPath = path.join(__dirname, "public", "favicon.ico");
+// const options = {
+//   maxAge: 200 * 60 * 60 * 24 * 1000,
+// };
+// app.use(favicon(iconPath, options));
 
 // Connect Database
 connectDB();
