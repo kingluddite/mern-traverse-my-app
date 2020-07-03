@@ -23,7 +23,9 @@ app.use(express.json({ extended: false }));
 
 // serve static files
 // To serve static files such as images, CSS files, and JavaScript files, use the express.static built-in middleware function in Express.
-app.use(express.static("client/public"));
+app.use(
+  express.static(path.resolve(__dirname, "client", "public", "index.html"))
+);
 
 // Define Routes
 app.use("/api/users", require("./routes/api/users"));
