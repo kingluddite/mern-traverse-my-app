@@ -1,18 +1,10 @@
 const express = require("express");
 const path = require("path");
-// add favicon later
-const favicon = require("serve-favicon");
 const colors = require("colors"); // eslint-disable-line no-unused-vars
 const dotenv = require("dotenv").config({ path: "./config/config.env" }); // eslint-disable-line no-unused-vars
 const connectDB = require("./config/db");
 
 const app = express();
-// favicon stuff
-const iconPath = path.join(__dirname, "public", "favicon.ico");
-const options = {
-  maxAge: 200 * 60 * 60 * 24 * 1000,
-};
-app.use(favicon(iconPath, options));
 
 // Connect Database
 connectDB();
@@ -23,9 +15,6 @@ app.use(express.json({ extended: false }));
 
 // serve static files
 // To serve static files such as images, CSS files, and JavaScript files, use the express.static built-in middleware function in Express.
-app.use(
-  express.static(path.resolve(__dirname, "client", "public", "index.html"))
-);
 
 // Define Routes
 app.use("/api/users", require("./routes/api/users"));
