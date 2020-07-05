@@ -1,11 +1,11 @@
-const express = require('express');
-const { check, validationResult } = require('express-validator');
-const gravatar = require('gravatar');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const express = require("express");
+const { check, validationResult } = require("express-validator");
+const gravatar = require("gravatar");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 // Bring in our User model
-const User = require('../../models/User');
+const User = require("../../models/User");
 
 const router = express.Router();
 
@@ -13,15 +13,13 @@ const router = express.Router();
 // @desc     Register User
 // @access    Public
 router.post(
-  '/',
+  "/",
   [
-    check('name', 'Name is required')
-      .not()
-      .isEmpty(),
-    check('email', 'Please include valid email').isEmail(),
+    check("name", "Name is required").not().isEmpty(),
+    check("email", "Please include valid email").isEmail(),
     check(
-      'password',
-      'Please enter a password with 6 or more characters'
+      "password",
+      "Please enter a password with 6 or more characters"
     ).isLength({ min: 6 }),
   ],
   async (req, res) => {
@@ -29,7 +27,7 @@ router.post(
     // If our errors array is not empty
     if (!errors.isEmpty()) {
       // return server error and errors
-      return res.status(400).json({ error: errors.array() });
+      return res.status(400).json({ errors: errors.array() });
     }
 
     const { name, email, password } = req.body;
@@ -42,16 +40,16 @@ router.post(
         return res.status(400).json({
           errors: [
             {
-              msg: 'User already exists',
+              msg: "User already exists",
             },
           ],
         });
       }
       // Get user's gravatar
       const avatar = gravatar.url(email, {
-        size: '200',
-        default: 'mm',
-        rating: 'pg',
+        size: "200",
+        default: "mm",
+        rating: "pg",
       });
 
       user = new User({
@@ -87,7 +85,7 @@ router.post(
       );
     } catch (err) {
       console.error(err.message);
-      res.status(500).send('Server error');
+      res.status(500).send("Server error");
     }
   }
 );
