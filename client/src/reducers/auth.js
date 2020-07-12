@@ -3,6 +3,10 @@ import {
   REGISTER_FAIL,
   USER_LOADED,
   AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT,
+  ACCOUNT_DELETED,
 } from '../actions/types';
 
 const initialState = {
@@ -24,10 +28,19 @@ export default function (state = initialState, action) {
         user: payload,
       };
     case REGISTER_SUCCESS:
+    case LOGIN_SUCCESS:
       localStorage.setItem('token', payload.token);
-      return { ...state, ...payload, isAuthenticated: true, loading: false };
+      return {
+        ...state,
+        ...payload,
+        isAuthenticated: true,
+        loading: false,
+      };
     case REGISTER_FAIL:
     case AUTH_ERROR:
+    case LOGIN_FAIL:
+    case LOGOUT:
+    case ACCOUNT_DELETED:
       // remove anything that is in localStorage (the token)
       // for a failed login we want to remove the token completely
       localStorage.removeItem('token');
@@ -38,7 +51,6 @@ export default function (state = initialState, action) {
         isAuthenticated: false,
         loading: false,
       };
-
     default:
       return state;
   }
