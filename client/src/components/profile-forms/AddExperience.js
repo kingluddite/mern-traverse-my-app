@@ -23,10 +23,10 @@ const AddExperience = ({ addExperience, history }) => {
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    addExperience(formData, history);
-  };
+  // const onSubmit = (e) => {
+  //   e.preventDefault();
+  //   addExperience(formData, history);
+  // };
 
   return (
     <Fragment>
@@ -76,6 +76,7 @@ const AddExperience = ({ addExperience, history }) => {
         <div className="form-group">
           <h4>From Date</h4>
           <input
+            id="from"
             type="date"
             name="from"
             value={from}

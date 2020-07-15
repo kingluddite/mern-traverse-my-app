@@ -1,4 +1,4 @@
-import React, { Fragment, Profiler } from 'react';
+import React, { Fragment } from 'react';
 import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
